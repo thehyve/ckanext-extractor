@@ -4,7 +4,9 @@ ckanext-extractor
 .. image:: https://travis-ci.org/stadt-karlsruhe/ckanext-extractor.svg?branch=master
     :target: https://travis-ci.org/stadt-karlsruhe/ckanext-extractor
 
-A CKAN_ extension for automatically extracting text and metadata from datasets.
+A the Hyve for of the CKAN extractor extension for the CKAN platform. Adds the ability
+to parse sas7bdat files. CKAN extractor is a CKAN_ extension for automatically extracting 
+text and metadata from datasets.
 
 *ckanext-extractor* automatically extracts text and metadata from your
 resources and adds them to the search index so that they can be used to find
