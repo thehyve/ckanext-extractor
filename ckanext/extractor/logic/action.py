@@ -122,13 +122,10 @@ def extractor_extract(context, data_dict):
             metadata.commit()
             metadata = None
             status = 'ignored'
-        elif (metadata.last_url != resource['url']
-              or metadata.last_format != resource['format']):
-            status = 'update'
         else:
             status = 'unchanged'
     except NoResultFound:
-        if is_format_indexed(resource['format']):
+        if is_format_indexed(resource['format']) or is_format_indexed(resource['url'].split('.')[-1]):
             status = 'new'
         else:
             status = 'ignored'

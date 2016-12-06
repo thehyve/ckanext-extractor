@@ -21,11 +21,16 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import datetime
 import tempfile
+import os
 
 from pylons import config
 import pysolr
 import requests
 
+from sas7bdat import SAS7BDAT as sas7bdat
+import logging
+
+convert_extensions = ['sas7bdat']
 
 def download_and_extract(resource_url):
     """
@@ -34,13 +39,28 @@ def download_and_extract(resource_url):
     The extracted metadata is cleaned and returned.
     """
     with tempfile.NamedTemporaryFile() as f:
+        extension = resource_url.split('.')[-1]
         r = requests.get(resource_url, stream=True)
         r.raise_for_status()
         for chunk in r.iter_content(chunk_size=1024):
             f.write(chunk)
         f.flush()
         f.seek(0)
-        data = pysolr.Solr(config['solr_url']).extract(f, extractFormat='text')
+        
+        # If we have a file we want to convert, convert it to a csv file
+        # and extract that instead of the original file.
+        if extension in convert_extensions: 
+            csv_name = '{}.csv'.format(f.name)
+            sas7bdat(f.name).convert_file(csv_name)
+            f = open(csv_name)
+        
+        data = pysolr.Solr(config).extract(f, extractFormat='text')
+        
+        # If we created a csv file remove the file since we no longer need it.     
+        if '.csv' == f.name[-4:]:
+            f.close()
+            os.remove(f.name)
+    
     data['metadata']['fulltext'] = data['contents']
     return dict(clean_metadatum(*x) for x in data['metadata'].iteritems())
 

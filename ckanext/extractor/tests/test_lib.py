@@ -46,6 +46,10 @@ class TestDownloadAndExtract(object):
         assert_true('Foobarium' in metadata['fulltext'], 'Incorrect fulltext.')
         assert_equal(metadata['content-type'], 'application/pdf')
 
+    def test_download_and_extract_sas7bdat(self):
+        bdat_url = 'http://localhost:{port}/presidents.sas7bdat'.format(port=self.PORT)
+        metadata = download_and_extract(bdat_url)
+        assert_true('Nixon' in metadata['fulltext'], 'Incorrect fulltext.')
 
 def test_clean_metadatum():
     assert_equal(clean_metadatum('X_y', ['X_y']), ('x-y', 'X_y'))
