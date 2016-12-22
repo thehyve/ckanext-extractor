@@ -53,8 +53,8 @@ def download_and_extract(resource_url):
             csv_name = '{}.csv'.format(f.name)
             sas7bdat(f.name).convert_file(csv_name)
             f = open(csv_name)
-        
-        data = pysolr.Solr(config).extract(f, extractFormat='text')
+        #from celery.contrib import rdb; rdb.set_trace()
+        data = pysolr.Solr(url=config['solr_url']).extract(f, extractFormat='text')
         
         # If we created a csv file remove the file since we no longer need it.     
         if '.csv' == f.name[-4:]:
