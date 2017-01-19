@@ -40,7 +40,7 @@ def download_and_extract(resource_url):
     """
     with tempfile.NamedTemporaryFile() as f:
         extension = resource_url.split('.')[-1]
-        r = requests.get(resource_url, stream=True)
+        r = requests.get(resource_url, stream=True, verify='/etc/nginx/certificates/ckan.pem')
         r.raise_for_status()
         for chunk in r.iter_content(chunk_size=1024):
             f.write(chunk)
